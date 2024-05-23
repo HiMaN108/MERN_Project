@@ -4,13 +4,14 @@ const router = Router();
 //import all controllers
 
 import * as controller from '../controllers/appController.js'
+import { registerMail } from "../controllers/mailer.js";
 import Auth , {localVariables} from '../middleware/auth.js'
 
 
 //  POST METHODs/
 router.route('/register').post(controller.register);  //register user
-router.route('/registerMail').post();         //send the mail
-router.route('/autenticate').post((req,res) => res.end());       // autheicate the user
+router.route('/registerMail').post(registerMail);         //send the mail
+router.route('/authenticate').post(controller.verifyUser, (req,res) => res.end());       // autheicate the user
 router.route('/login').post(controller.verifyUser,controller.login);          // login the user
 
 
@@ -23,6 +24,6 @@ router.route('/createResetSession').get(controller.createResetSession)     // re
 //PUT methods
 
 router.route('/updateuser').put(Auth , controller.updateUser);  // is use to update the userprofile
-router.route('/resetPassword').put(controller.resetPassword);  //use to reset password
+router.route('/resetPassword').put(controller.verifyUser, controller.resetPassword);  //use to reset password
 
 export default router;
